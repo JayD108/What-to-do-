@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="logo.png">
+<title>Mrittunjay Dubey</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Computer Science student building language models for Indian languages, Himalayan storm nowcasting and EEG seizure forecasting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..125,500..800&family=Anek+Latin:wdth,wght@75..125,400..800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a night-time lab notebook. One huge Devanagari name, then each project
+   runs as an argument on the left with its real result as evidence on the right.
+   Single dark look on purpose: the owner's own line is "coding after dark". */
+:root {
+  color-scheme: dark;
+  --bg: #0B0E16;
+  --fg: #ECE8DD;
+  --muted: #A3ABBF;
+  --line: #252B3B;
+  --raised: #141824;
+  --accent: #F5C542;
+  --s1: #C48520;
+  --s2: #3F93CC;
+  --s3: #D0628A;
+  --display: "Anek Latin", "Segoe UI", system-ui, sans-serif;
+  --deva: "Anek Devanagari", "Nirmala UI", "Mangal", sans-serif;
+  --body: "Hind", "Nirmala UI", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 1.0625rem/1.6 var(--body); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0; }
+@media (min-width: 720px) { .wrap { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); } }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--fg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3, p, ul, dl, dd, figure { margin: 0; padding: 0; }
+ul { list-style: none; }
+.mono { font-family: var(--mono); font-size: .8125rem; letter-spacing: .01em; }
+.label { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.deva { font-family: var(--deva); }
+
+/* Top line */
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 24px; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.top nav a { color: var(--muted); font-family: var(--mono); font-size: .8125rem; }
+.top nav a:hover { color: var(--accent); }
+
+/* Hero: a night city with a searchlight. The canvas paints behind the text. */
+.sky { position: relative; overflow: hidden; background: var(--bg); }
+.sky canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sky-inner { position: relative; }
+.hero { padding-block: clamp(16px, 4vw, 44px) 310px; display: grid; gap: 24px; }
+@media (min-width: 900px) { .hero { padding-bottom: 170px; } }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); }
+.brand img { height: 22px; width: auto; flex: none; display: block; }
+.signal-btn { justify-self: start; font: 500 .8125rem var(--mono); color: var(--accent); background: rgba(11,14,22,.6); border: 1px solid var(--accent); border-radius: 4px; padding: 7px 12px; cursor: pointer; }
+.signal-btn:hover { background: var(--accent); color: var(--bg); }
+.hero-name { font-family: var(--deva); font-weight: 800; font-stretch: 112%; color: var(--accent); font-size: clamp(3.25rem, 11.5vw, 9.5rem); line-height: 1.12; letter-spacing: -.01em; }
+h1 { font-family: var(--display); font-weight: 600; font-stretch: 125%; font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.15; }
+.hero-text { display: grid; gap: 14px; max-width: 62ch; }
+.lead { font-family: var(--display); font-weight: 500; font-size: clamp(1.25rem, 2.2vw, 1.625rem); line-height: 1.3; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--mono); font-size: .875rem; }
+.ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px 32px; padding-block: 32px 48px; }
+.ledger b { display: block; font-family: var(--display); font-weight: 600; font-stretch: 110%; font-size: 1.75rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.ledger span { color: var(--muted); font-size: .9375rem; line-height: 1.4; display: block; }
+
+/* Sections */
+section { border-top: 1px solid var(--line); padding-block: clamp(44px, 6vw, 72px); }
+.section-title { font-family: var(--display); font-weight: 700; font-stretch: 120%; font-size: clamp(1.625rem, 3vw, 2.25rem); line-height: 1.15; text-wrap: balance; }
+
+/* About */
+.about { display: grid; gap: 20px clamp(32px, 5vw, 72px); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .about { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.about-text { display: grid; gap: 16px; min-width: 0; font-size: 1.1875rem; line-height: 1.6; }
+.about-text p { max-width: 62ch; }
+
+/* Choosing a path through the work */
+.paths { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 24px; }
+@media (min-width: 620px) { .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.path { display: grid; gap: 4px; text-align: left; padding: 16px 18px; cursor: pointer; font: inherit; color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 4px; }
+.path b { font-family: var(--display); font-weight: 700; font-stretch: 115%; font-size: clamp(1.375rem, 2.6vw, 1.75rem); line-height: 1.15; }
+.path span { color: var(--muted); font-size: .9375rem; line-height: 1.4; }
+.path:hover { border-color: var(--accent); }
+.path[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.path[aria-selected="true"] span { color: var(--bg); }
+.panel-intro { margin-top: 26px; max-width: 62ch; color: var(--muted); }
+.subhead { font-family: var(--display); font-weight: 700; font-stretch: 115%; font-size: 1.375rem; line-height: 1.2; padding-top: 28px; border-top: 1px solid var(--line); }
+.subhead + .more { margin-top: 14px; }
+.shot { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 4px; }
+.feature-list { display: grid; gap: 12px; }
+.feature-list dt { font-family: var(--display); font-weight: 600; font-size: 1.0625rem; line-height: 1.3; }
+.feature-list dd { color: var(--muted); font-size: .9375rem; line-height: 1.45; }
+
+/* Projects */
+.project { display: grid; gap: 32px clamp(32px, 5vw, 72px); grid-template-columns: minmax(0, 1fr); padding-block: clamp(36px, 5vw, 60px); border-top: 1px solid var(--line); }
+.project:first-of-type { margin-top: 28px; }
+@media (min-width: 900px) { .project { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.story { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.story h3 { font-family: var(--display); font-weight: 800; font-stretch: 120%; font-size: clamp(2rem, 4.4vw, 3.25rem); line-height: 1.05; }
+.story .sum { font-family: var(--display); font-weight: 500; font-size: 1.25rem; line-height: 1.32; text-wrap: pretty; }
+.story p { max-width: 62ch; }
+.limit { color: var(--muted); }
+.stack { color: var(--muted); }
+.evidence { min-width: 0; display: grid; gap: 16px; align-content: start; }
+.fig-title { font-family: var(--display); font-weight: 600; font-size: 1.0625rem; line-height: 1.3; }
+.fig-note { color: var(--muted); font-size: .9375rem; line-height: 1.45; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: .875rem; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+.chart { position: relative; width: 100%; min-height: 240px; touch-action: pan-y; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Bars */
+.bars { display: grid; gap: 14px; }
+.bar { display: grid; grid-template-columns: minmax(0, 1fr) 3.2em; gap: 2px 10px; align-items: center; }
+.bar .name { grid-column: 1 / -1; font-size: .9375rem; line-height: 1.3; }
+.track { position: relative; height: 14px; }
+.track .fill { position: absolute; left: 0; top: 4px; height: 6px; border-radius: 0 4px 4px 0; }
+.chance .track::after { content: ""; position: absolute; left: 50%; top: -6px; bottom: -6px; width: 1px; background: var(--muted); }
+.bar .val { font-family: var(--mono); font-size: .875rem; text-align: right; font-variant-numeric: tabular-nums; }
+.axis { display: grid; grid-template-columns: minmax(0, 1fr) 3.2em; gap: 10px; }
+.axis div { position: relative; height: 1.3em; font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+.axis span { position: absolute; top: 0; white-space: nowrap; }
+
+/* Spec sheet */
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px 28px; }
+.spec dt { font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; color: var(--muted); }
+.spec dd { font-family: var(--display); font-weight: 600; font-size: 1.1875rem; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.langs { font-family: var(--deva); font-weight: 600; font-size: clamp(1.375rem, 3vw, 1.875rem); line-height: 1.3; display: flex; flex-wrap: wrap; gap: 2px 18px; }
+.cmd { display: flex; align-items: stretch; gap: 0; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); }
+.cmd pre { margin: 0; padding: 10px 12px; font: 400 .8125rem/1.6 var(--mono); overflow-x: auto; flex: 1 1 auto; min-width: 0; }
+.cmd button { flex: none; font: 500 .75rem var(--mono); color: var(--accent); background: none; border: 0; border-left: 1px solid var(--line); padding: 0 14px; cursor: pointer; min-width: 68px; }
+.cmd button:hover { color: var(--fg); }
+.verse { font-family: var(--deva); font-weight: 500; font-size: 1.1875rem; line-height: 1.7; margin: 0; }
+
+/* Data tables */
+details { font-size: .9375rem; }
+summary { cursor: pointer; color: var(--muted); font-family: var(--mono); font-size: .8125rem; }
+summary:hover { color: var(--accent); }
+.tw { overflow-x: auto; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 5px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; padding-left: 0; }
+th { font-family: var(--mono); font-size: .75rem; font-weight: 500; color: var(--muted); }
+
+/* Other work */
+.more { margin-top: 28px; display: grid; }
+.more li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 32px; padding-block: 22px; border-top: 1px solid var(--line); }
+@media (min-width: 820px) { .more li { grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 2fr); } .more .go { text-align: right; } }
+.more h3 { font-family: var(--display); font-weight: 700; font-stretch: 110%; font-size: 1.25rem; line-height: 1.25; }
+.more p { min-width: 0; }
+.more .go { font-family: var(--mono); font-size: .8125rem; display: flex; flex-direction: column; gap: 2px; }
+
+/* Background */
+.two { display: grid; gap: 40px clamp(32px, 5vw, 72px); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .two { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.two > div { min-width: 0; display: grid; gap: 18px; align-content: start; }
+.todo { border: 1px dashed var(--accent); border-radius: 4px; padding: 3px 9px; font-family: var(--mono); font-size: .8125rem; color: var(--accent); display: inline-block; }
+.rows { display: grid; gap: 14px; }
+.rows > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+@media (min-width: 560px) { .rows > div { grid-template-columns: 9.5em minmax(0, 1fr); gap: 16px; align-items: baseline; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px 44px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+.quote { font-family: var(--display); font-weight: 500; font-size: clamp(1.25rem, 2.6vw, 1.75rem); line-height: 1.3; max-width: 34ch; text-wrap: balance; margin-top: 30px; }
+.contact-grid { display: grid; gap: 32px clamp(32px, 5vw, 72px); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--raised); border: 1px solid var(--line); border-radius: 4px; padding: 7px 10px; font-size: .8125rem; line-height: 1.4; color: var(--fg); max-width: 240px; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+#tip b { display: block; font-weight: 600; }
+#tip div { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); }
+#tip div span:last-child { color: var(--fg); font-family: var(--mono); }
+</style>
+
+<div class="sky" id="sky">
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+  <div class="wrap sky-inner">
+    <header class="top">
+      <span class="mono brand"><img src="logo.png" alt="" width="288" height="162">B.Tech CSE at SRM &middot; coding after dark</span>
+      <nav aria-label="Page sections"><a href="#about">About</a><a href="#ai-ml">AI &amp; ML</a><a href="#development">Development</a><a href="#background">Education</a><a href="#contact">Contact</a></nav>
+    </header>
+    <div class="hero">
+      <p class="hero-name" lang="hi" aria-hidden="true">मृत्युंजय दुबे</p>
+      <div class="hero-text">
+        <h1>Mrittunjay Dubey</h1>
+        <p class="lead">I like turning data into intelligence.</p>
+        <p>I build machine learning systems for problems close to home, and software people can actually use.</p>
+        <p class="links"><a href="https://github.com/JayD108">GitHub</a><a href="https://huggingface.co/JayF14">Hugging Face</a><a href="https://x.com/JayD_108">X</a></p>
+        <button type="button" class="signal-btn" id="signal-btn" aria-pressed="true">Turn off the signal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="ledger">
+    <div><b>110.1M</b><span>parameters in MONA, trained from scratch on one laptop GPU</span></div>
+    <div><b>190 GB</b><span>of synchronized weather data behind VARUNA</span></div>
+    <div><b>624</b><span>fold trainings in the APALA v2 benchmark, on one laptop GPU</span></div>
+    <div><b>407</b><span>downloads of my public EEG dataset, as of November 2026</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+<section id="about" aria-labelledby="about-h">
+  <div class="about">
+    <h2 class="section-title" id="about-h">About me</h2>
+    <div class="about-text">
+      <p>I'm Mrittunjay Dubey, a B.Tech Computer Science student at SRM Institute of Science and Technology, graduating in 2028. Most of my coding happens after dark, and most of it starts with a question I want to answer for myself.</p>
+      <p>My main focus is machine learning and deep learning, working from the raw data up. I've trained a 110M-parameter language model from scratch for English, Hindi, Hinglish and Awadhi, built a storm forecasting model for the Himalayas, and spent a long stretch on seizure forecasting from EEG. That last project taught me to distrust my own good numbers: when I tested my models under strict rules, they fell to chance, so I wrote that result up as a preprint.</p>
+      <p>I also like building software people can use, including an Android attendance planner and an interactive algorithm visualizer. Right now I'm learning Java backend development and practising data structures and algorithms in C++.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section id="work" aria-labelledby="work-h">
+  <h2 class="section-title" id="work-h">Case files: choose what to explore</h2>
+  <div class="paths" role="tablist" aria-label="Type of work">
+    <button type="button" class="path" role="tab" id="tab-ai-ml" aria-controls="ai-ml" aria-selected="true"><b>AI &amp; ML</b><span>Models, research and datasets</span></button>
+    <button type="button" class="path" role="tab" id="tab-development" aria-controls="development" aria-selected="false" tabindex="-1"><b>Development</b><span>Web, Android and backend projects</span></button>
+  </div>
+
+  <div class="panel" id="ai-ml" role="tabpanel" aria-labelledby="tab-ai-ml">
+  <p class="panel-intro">Models I've trained and measured. Each one states its limits next to its best numbers.</p>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Medical signals</span>
+      <h3>APALA v2</h3>
+      <p class="sum">Can a network trained on other patients warn of a seizure 5&ndash;35 minutes ahead in a patient it has never seen? I built a benchmark strict enough to find out.</p>
+      <p>Seizure prediction on CHB-MIT is often reported at 90&ndash;99% accuracy. My own earlier systems reported 99.1% accuracy and AUC 0.64, and both fell to chance when I re-ran them under strict rules. So APALA v2 sets the rules first: selection rules committed before the results, nested leave-one-subject-out validation across 23 subjects, causal filters, and scoring against a random alarm with the same false-alarm rate.</p>
+      <p>On CHB-MIT, the answer is no. A six-stage search reached 13.2% sensitivity against 9.3% for a matched random alarm (p = 0.185), with 0 of 23 subjects above chance. Frozen and run once on the independent Siena hospital dataset, the model raised no alarms and predicted 0 of 39 seizures.</p>
+      <p>Two findings apply beyond this dataset. With a refractory period, the textbook Poisson chance level understates chance by 13&ndash;23 percentage points at 1&ndash;1.5 alarms per hour. And Youden-optimal thresholds keep the alarm on 58&ndash;85% of the time, so sensitivity turns into coverage.</p>
+      <p class="limit">Preprint v1.5, not peer reviewed. This is a retrospective research benchmark, not a medical device. It doesn't show that forecasting is impossible: long-term, per-patient forecasting has positive results.</p>
+      <p class="mono stack">Python &middot; PyTorch &middot; SE-ResNet-18 &middot; MODWT wavelets &middot; 73 test functions &middot; SHA-256 model freeze</p>
+      <p><span class="todo">add: paper and code links once public</span></p>
+    </div>
+    <figure class="evidence">
+      <figcaption class="fig-title">How evaluation shortcuts turn 0 of 39 seizures into 39 of 39</figcaption>
+      <div class="legend">
+        <span><i style="background:var(--s2)"></i>Honest evaluation</span>
+        <span><i style="background:var(--s1)"></i>With shortcuts added</span>
+      </div>
+      <div class="bars">
+        <div class="bar" data-tip="The real result: frozen model, run once|Mean sensitivity 0.000|False alarms/h 0.000|Matched chance 0.000">
+          <span class="name">No shortcuts: the real result</span>
+          <div class="track"><div class="fill" style="width:0;background:var(--s2)"></div></div><span class="val">0</span>
+        </div>
+        <div class="bar" data-tip="One threshold tuned on Siena|Mean sensitivity 0.108|False alarms/h 0.114|Matched chance 0.076">
+          <span class="name">One threshold tuned on Siena</span>
+          <div class="track"><div class="fill" style="width:7.69%;background:var(--s1)"></div></div><span class="val">3</span>
+        </div>
+        <div class="bar" data-tip="A threshold per patient, chosen on that patient's seizures|Mean sensitivity 0.122|False alarms/h 0.019|Matched chance 0.012">
+          <span class="name">Per-patient thresholds chosen on test seizures</span>
+          <div class="track"><div class="fill" style="width:14.62%;background:var(--s1)"></div></div><span class="val">5.7</span>
+        </div>
+        <div class="bar" data-tip="Adds lenient scoring: no horizon, 60 min window|Mean sensitivity 0.666|False alarms/h 0.185|Matched chance 0.254">
+          <span class="name">Those thresholds plus lenient scoring</span>
+          <div class="track"><div class="fill" style="width:68.46%;background:var(--s1)"></div></div><span class="val">26.7</span>
+        </div>
+        <div class="bar" data-tip="Classifier trained on a random half of Siena windows, with per-patient thresholds|Mean sensitivity 0.815|False alarms/h 0.033|Matched chance 0.018">
+          <span class="name">Classifier on a random half of the windows, same thresholds</span>
+          <div class="track"><div class="fill" style="width:82.05%;background:var(--s1)"></div></div><span class="val">32</span>
+        </div>
+        <div class="bar" data-tip="The same classifier with lenient scoring|Mean sensitivity 1.000|False alarms/h 0.058|Matched chance 0.097">
+          <span class="name">That classifier plus lenient scoring</span>
+          <div class="track"><div class="fill" style="width:100%;background:var(--s1)"></div></div><span class="val">39</span>
+        </div>
+        <div class="bar" data-tip="Classifier trained on the other Siena patients, threshold chosen on them|Mean sensitivity 0.248|False alarms/h 0.805|Matched chance 0.472">
+          <span class="name">Honest: trained on the other patients</span>
+          <div class="track"><div class="fill" style="width:30.77%;background:var(--s2)"></div></div><span class="val">12</span>
+        </div>
+        <div class="axis" aria-hidden="true"><div><span style="left:0">0</span><span style="left:50%;transform:translateX(-50%)">seizures predicted</span><span style="right:0">39</span></div><div></div></div>
+      </div>
+      <p class="fig-note">Post-hoc demonstration on the Siena data, and none of these numbers is a performance claim. The honest model's 12 of 39 is below the 47% a random alarm gets at its alarm rate.</p>
+      <details>
+        <summary>Model results on CHB-MIT (table)</summary>
+        <div class="tw"><table>
+          <thead><tr><th>Model</th><th>Sensitivity</th><th>Matched chance</th><th>False alarms/h</th><th>Window AUC</th></tr></thead>
+          <tbody>
+            <tr><td>Line-length baseline</td><td>0.787</td><td>0.721</td><td>1.43</td><td>0.540</td></tr>
+            <tr><td>Features + SVM</td><td>0.657</td><td>0.577</td><td>1.14</td><td>0.518</td></tr>
+            <tr><td>Features + XGBoost</td><td>0.633</td><td>0.585</td><td>1.18</td><td>0.541</td></tr>
+            <tr><td>EEGNet</td><td>0.687</td><td>0.653</td><td>1.27</td><td>0.515</td></tr>
+            <tr><td>Welch + ResNet-18</td><td>0.566</td><td>0.547</td><td>1.08</td><td>0.496</td></tr>
+            <tr><td>NeuroKAN (v1)</td><td>0.590</td><td>0.577</td><td>1.13</td><td>0.526</td></tr>
+            <tr><td>APALA v2 final (3 seeds)</td><td>0.132</td><td>0.093</td><td>0.18</td><td>0.519</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </figure>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Medical signals</span>
+      <h3>APALA v1</h3>
+      <p class="sum">The model behind the live system that came first: seizure risk from scalp EEG. Formerly NeuroPulse.</p>
+      <p>It turns 686 CHB-MIT recordings with 198 annotated seizures into 590 features per window and trains a stacking ensemble on GPU. Rewriting Sample Entropy with Numba made it 158&times; faster.</p>
+      <p>The main finding is the gap in the chart. The model scores 0.998 on a patient it was trained on and 0.56 across patients it has never seen, barely above chance. That gap is why I built v2.</p>
+      <p class="limit">Research prototype. Not a medical device and not for clinical decisions.</p>
+      <p class="mono stack">Python &middot; XGBoost &middot; LightGBM &middot; Random Forest &middot; Numba</p>
+      <p class="links"><a href="https://github.com/JayD108/Neuro_Pulse-Apala-">Code</a><a href="https://huggingface.co/JayF14/Neuro_Pulse">Model</a><a href="#development">See the dashboard</a></p>
+    </div>
+    <figure class="evidence">
+      <figcaption class="fig-title">ROC-AUC under four evaluation methods</figcaption>
+      <div class="legend">
+        <span><i style="background:var(--s1)"></i>Patients the model knows</span>
+        <span><i style="background:var(--s2)"></i>Patients it has never seen</span>
+      </div>
+      <div class="bars chance">
+        <div class="bar" data-tip="Trained and tested on the same patient (chb01)|Sensitivity 94.3%|Specificity 99.5%">
+          <span class="name">One known patient</span>
+          <div class="track"><div class="fill" style="width:99.8%;background:var(--s1)"></div></div><span class="val">0.998</span>
+        </div>
+        <div class="bar" data-tip="Ensemble evaluation, 3,585 windows|Sensitivity 92.3%|Specificity 97.6%">
+          <span class="name">Ensemble evaluation</span>
+          <div class="track"><div class="fill" style="width:99.3%;background:var(--s1)"></div></div><span class="val">0.993</span>
+        </div>
+        <div class="bar" data-tip="Train chb01&ndash;10, test chb11&ndash;24|Sensitivity 5.7%|Specificity 98.1%">
+          <span class="name">Unseen patients (chb11&ndash;24)</span>
+          <div class="track"><div class="fill" style="width:59.5%;background:var(--s2)"></div></div><span class="val">0.595</span>
+        </div>
+        <div class="bar" data-tip="Each patient scored by a model trained on the other 23|Sensitivity 27.9%|Specificity 77.7%">
+          <span class="name">Leave one patient out (mean of 24)</span>
+          <div class="track"><div class="fill" style="width:56%;background:var(--s2)"></div></div><span class="val">0.560</span>
+        </div>
+        <div class="axis" aria-hidden="true"><div><span style="left:0">0</span><span style="left:50%;transform:translateX(-50%)">0.5 chance</span><span style="right:0">1.0</span></div><div></div></div>
+      </div>
+      <details>
+        <summary>Full results (table)</summary>
+        <div class="tw"><table>
+          <thead><tr><th>Evaluation</th><th>ROC-AUC</th><th>Sensitivity</th><th>Specificity</th></tr></thead>
+          <tbody>
+            <tr><td>One known patient</td><td>0.998</td><td>94.3%</td><td>99.5%</td></tr>
+            <tr><td>Ensemble evaluation</td><td>0.993</td><td>92.3%</td><td>97.6%</td></tr>
+            <tr><td>Unseen patients</td><td>0.595</td><td>5.7%</td><td>98.1%</td></tr>
+            <tr><td>Leave one patient out</td><td>0.56</td><td>27.9%</td><td>77.7%</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </figure>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Language models</span>
+      <h3>MONA</h3>
+      <p class="sum">A small language model you can open up and look inside.</p>
+      <p>I trained MONA from scratch on 2.5 billion tokens, then built a terminal app that teaches how LLMs work using her real weights. You can watch a sentence become tokens, inspect attention layer by layer, debug why she repeats herself, and train a tiny model of your own. Pressing F8 on any screen shows the code behind it.</p>
+      <p class="limit">MONA writes fluent text but often states wrong facts and can't do arithmetic. She is built for learning, and the model card says so.</p>
+      <p class="mono stack">Python &middot; PyTorch &middot; byte-level BPE tokenizer &middot; Llama-style architecture</p>
+      <p class="links"><a href="https://github.com/JayD108/Mona">Code</a><a href="https://huggingface.co/JayF14/MONA">Model</a></p>
+    </div>
+    <div class="evidence">
+      <div class="langs"><span>English</span><span>हिंदी</span><span>Hinglish</span><span>अवधी</span></div>
+      <dl class="spec">
+        <div><dt>Architecture</dt><dd>12 layers, width 768</dd></div>
+        <div><dt>Context</dt><dd>1,024 tokens</dd></div>
+        <div><dt>Tokenizer</dt><dd>32,768 tokens</dd></div>
+        <div><dt>Pretraining</dt><dd>~19 h, RTX 5080 Laptop</dd></div>
+        <div><dt>Chat tuning</dt><dd>~100K conversations</dd></div>
+        <div><dt>License</dt><dd>MIT</dd></div>
+      </dl>
+      <div>
+        <p class="fig-title">Held-out text, bits per byte (lower is better)</p>
+        <div class="tw"><table><thead><tr><th>English</th><th>Hindi</th><th>Hinglish</th></tr></thead><tbody><tr><td style="padding-left:0;text-align:left">1.027</td><td>0.455</td><td>1.058</td></tr></tbody></table></div>
+      </div>
+      <div class="cmd"><pre id="install-cmd">pip install git+https://github.com/JayD108/Mona.git
+mona</pre><button type="button" id="copy-btn">Copy</button></div>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Extreme weather</span>
+      <h3>VARUNA</h3>
+      <p class="sum">Forecasts cloudbursts, thunderstorms and flash floods over the Himalayas, 2&ndash;6 hours ahead.</p>
+      <p>A 17.6M-parameter Hybrid TransUNet that fuses three inputs: IMDAA atmospheric reanalysis, INSAT-3D satellite imagery and CartoDEM terrain. The data covers Uttarakhand and Himachal Pradesh during August 2019.</p>
+      <p>Early runs were failing on timestamp misalignment and a 1:460 class imbalance. The final version replaced coarse 25 km labels with 1 km labels, which raised cloudburst signal density 461&times;.</p>
+      <p class="limit">Recall is above 80% for all three hazards, but false alarms are common: precision is 18% for cloudbursts and 8% for flash floods. The holdout is 11 windows from one month, so it needs multi-year data before any operational claim.</p>
+      <p class="mono stack">PyTorch &middot; 3D + 2D CNNs &middot; self-attention &middot; NetCDF &middot; HDF5 &middot; GeoTIFF</p>
+      <p class="links"><a href="https://huggingface.co/JayF14/varuna-HybridTransU-net">Model and demo script</a></p>
+    </div>
+    <figure class="evidence">
+      <figcaption class="fig-title">F1 score by model version, seven training runs</figcaption>
+      <div class="legend" id="varuna-legend"></div>
+      <div class="chart" id="varuna-chart" role="img" aria-label="Line chart of F1 score across four model versions. Thunderstorm rises from about 40 to 86 percent, cloudburst from 0.08 to 30 percent, flash flood from 0 to 14.94 percent."></div>
+      <details>
+        <summary>Holdout metrics for v3.0 (Aug 23&ndash;25, 2019)</summary>
+        <div class="tw"><table>
+          <thead><tr><th>Hazard</th><th>Precision</th><th>Recall</th><th>F1</th><th>IoU</th></tr></thead>
+          <tbody>
+            <tr><td>Cloudburst</td><td>18.29%</td><td>83.36%</td><td>30.00%</td><td>17.65%</td></tr>
+            <tr><td>Thunderstorm</td><td>80.56%</td><td>92.17%</td><td>85.97%</td><td>75.40%</td></tr>
+            <tr><td>Flash flood</td><td>8.24%</td><td>80.58%</td><td>14.94%</td><td>8.08%</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+      <details>
+        <summary>F1 by version (table)</summary>
+        <div class="tw"><table>
+          <thead><tr><th>Version</th><th>Cloudburst</th><th>Thunderstorm</th><th>Flash flood</th></tr></thead>
+          <tbody>
+            <tr><td>v1.0 (runs 1&ndash;3)</td><td>0.08%</td><td>~40%</td><td>0.00%</td></tr>
+            <tr><td>v2.0 (runs 4&ndash;5)</td><td>0.08%</td><td>~72%</td><td>0.00%</td></tr>
+            <tr><td>v2.1 (run 6)</td><td>10.60%</td><td>75.82%</td><td>1.52%</td></tr>
+            <tr><td>v3.0 (final)</td><td>30.00%</td><td>85.97%</td><td>14.94%</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </figure>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Language models</span>
+      <h3>MANAS</h3>
+      <p class="sum">A character-level transformer trained on the poetry of Goswami Tulsidas.</p>
+      <p>I wanted to know whether a small transformer could learn the patterns of classical Awadhi verse from raw characters. I wrote it from scratch in PyTorch with no pretrained weights: 10.9M parameters, a 101-character Devanagari vocabulary and about 2.83 million characters of text, including the Ramcharitmanas and Vinay Patrika.</p>
+      <p class="limit">This is an experimental checkpoint. The output looks like Devanagari verse without being coherent poetry, and the OCR-derived corpus still has errors. A cleaned, page-verified corpus is planned for v2.</p>
+      <p class="mono stack">PyTorch &middot; GPT-style decoder &middot; MIT license</p>
+      <p class="links"><a href="https://huggingface.co/JayF14/MANAS">Model</a></p>
+    </div>
+    <figure class="evidence">
+      <figcaption class="fig-title">Training and validation loss</figcaption>
+      <div class="legend" id="manas-legend"></div>
+      <div class="chart" id="manas-chart" role="img" aria-label="Line chart of loss over 15,000 steps. Training loss falls from 4.85 to 1.03. Validation loss reaches 2.05 at step 5,000, then rises to 2.11."></div>
+      <p class="fig-note">Validation loss stops improving around step 5,000 while training loss keeps falling. The model starts memorizing the corpus from there.</p>
+      <details>
+        <summary>Loss by step (table)</summary>
+        <div class="tw"><table>
+          <thead><tr><th>Step</th><th>Train</th><th>Validation</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>4.85</td><td>4.85</td></tr>
+            <tr><td>500</td><td>2.29</td><td>2.61</td></tr>
+            <tr><td>2,000</td><td>1.62</td><td>2.15</td></tr>
+            <tr><td>5,000</td><td>1.35</td><td>2.05</td></tr>
+            <tr><td>10,000</td><td>1.16</td><td>2.07</td></tr>
+            <tr><td>15,000</td><td>1.03</td><td>2.11</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+      <div>
+        <p class="label" style="margin-bottom:6px">Model output, prompt &ldquo;श्री&rdquo;</p>
+        <p class="verse" lang="hi">निदान दीन बचन गहि सोभा बढ़ावा।<br>बालि और बिपुल बोलावड़े गावा ॥</p>
+      </div>
+    </figure>
+  </article>
+
+  <h3 class="subhead">Also in AI &amp; ML</h3>
+  <ul class="more">
+    <li>
+      <h3>CHB-MIT Preprocessed EEG</h3>
+      <p>A public, feature-engineered dataset for seizure forecasting that's ready to train on with no signal processing: 347,075 labelled windows, 590 features per window, about 3.9 GB. It has 407 downloads and 5 likes as of November 2026.<br><span class="mono stack">Hugging Face dataset &middot; ODC-By 1.0</span></p>
+      <div class="go"><a href="https://huggingface.co/datasets/JayF14/chb-mit-preprocessed-eeg">Dataset</a></div>
+    </li>
+    <li>
+      <h3>God's Eye &amp; StudyMind</h3>
+      <p>A local AI system that turns unstructured web data and course documents into interactive knowledge graphs.<br><span class="mono stack">FastAPI &middot; Neo4j &middot; Ollama</span></p>
+      <div class="go"><a href="https://github.com/JayD108/God-S-EYE-v2.0">Code</a></div>
+    </li>
+  </ul>
+  </div>
+
+  <div class="panel" id="development" role="tabpanel" aria-labelledby="tab-development">
+  <p class="panel-intro">Software people can open, install and use, from a live web app to a native Android app. I'm currently learning Java backend development.</p>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Web app &middot; live</span>
+      <h3>AlgoVision</h3>
+      <p class="sum">An interactive dashboard that turns algorithm theory into animations you can control.</p>
+      <p>A Python server computes real results and the browser animates them, with play, pause and speed controls. Every algorithm has a Learn panel covering how it works, its complexity and where it's used. The frontend has no UI libraries or build step, and every endpoint has input limits so one request can't overload the server.</p>
+      <p>pytest cross-checks the algorithms against brute-force results and validates the API.</p>
+      <p class="mono stack">Python &middot; FastAPI &middot; Pydantic &middot; vanilla JavaScript &middot; pytest &middot; ruff</p>
+      <p class="links"><a href="https://algo-vision-nu.vercel.app">Live demo</a><a href="https://github.com/JayD108/AlgoVision">Code</a></p>
+    </div>
+    <div class="evidence">
+      <p class="fig-title">Nine algorithms across seven families</p>
+      <dl class="feature-list">
+        <div><dt>Greedy</dt><dd>Huffman coding, compared against Shannon entropy</dd></div>
+        <div><dt>Dynamic programming</dt><dd>0/1 knapsack and stock profit with K transactions</dd></div>
+        <div><dt>NP-hard</dt><dd>Travelling salesman: exact Held-Karp up to 15 cities, heuristic up to 30</dd></div>
+        <div><dt>Backtracking</dt><dd>N-Queens and Sudoku</dd></div>
+        <div><dt>Recursion</dt><dd>Tower of Hanoi</dd></div>
+        <div><dt>Graphs</dt><dd>Max flow with Edmonds-Karp and minimum-cut display</dd></div>
+        <div><dt>Game theory</dt><dd>Tic-Tac-Toe against minimax with alpha-beta pruning</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Android app</span>
+      <h3>Bunk &amp; Chutti</h3>
+      <p class="sum">An attendance planner for students: see how many classes you can miss before it costs you.</p>
+      <p>A native Android app written in Java. It reads a photo of your timetable to set up your schedule, then forecasts your attendance for the rest of the semester.</p>
+      <p class="mono stack">Java &middot; Android &middot; Google ML Kit &middot; MPAndroidChart &middot; AndroidX Security</p>
+      <p class="links"><a href="https://github.com/JayD108/srmpro">Code</a></p>
+    </div>
+    <div class="evidence">
+      <p class="fig-title">What it does</p>
+      <dl class="feature-list">
+        <div><dt>Time Machine</dt><dd>Simulates future attendance, such as missing all of next week</dd></div>
+        <div><dt>Smart Status</dt><dd>Shows at a glance how many classes you can skip or must attend</dd></div>
+        <div><dt>Timetable Scanner</dt><dd>Sets up your schedule from an image using OCR</dd></div>
+        <div><dt>Semester Forecast</dt><dd>Breaks down every class month by month until the semester ends</dd></div>
+        <div><dt>Encrypted storage</dt><dd>Protects your data with AES-256 through Android KeyStore</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="story">
+      <span class="label">Full stack</span>
+      <h3>APALA dashboard</h3>
+      <p class="sum">A real-time monitoring interface that streams each patient's seizure risk to the screen, replaying recorded EEG.</p>
+      <p>A FastAPI backend with 6 API endpoints streams scores over one WebSocket per patient to a Next.js frontend. The interface includes a patient monitor, a 10-20 electrode map, and pages for the dataset and methods. A 3.4 MB XGBoost model trained on all 24 patients produces the scores.</p>
+      <p class="limit">Research prototype. Not a medical device and not for clinical decisions.</p>
+      <p class="mono stack">FastAPI &middot; Next.js &middot; WebSockets &middot; XGBoost</p>
+      <p class="links"><a href="https://github.com/JayD108/Neuro_Pulse-Apala-">Code</a><a href="#ai-ml">See the model results</a></p>
+    </div>
+    <figure class="evidence">
+      <img class="shot" src="dashboard.png" width="1400" height="808" loading="lazy" alt="The APALA patient monitor showing a seizure risk score for each patient.">
+      <figcaption class="fig-note">The patient monitor, replaying recorded CHB-MIT EEG window by window.</figcaption>
+    </figure>
+  </article>
+
+  <h3 class="subhead">Also in development</h3>
+  <ul class="more">
+    <li>
+      <h3>TRIANGLE</h3>
+      <p>A browser-based open-source intelligence platform that maps strategic chokepoints and geopolitical developments, with a council of 11 AI agents answering queries, including one that checks the others' work.<br><span class="mono stack">TypeScript &middot; Node.js</span></p>
+      <div class="go"><a href="https://github.com/JayD108/TRIANGLE-OSINT">Code</a></div>
+    </li>
+    <li>
+      <h3>Java projects</h3>
+      <p>An inventory management system, a multi-threaded CSV file processor and a Swing calculator.<br><span class="mono stack">Java &middot; Swing</span></p>
+      <div class="go"><a href="https://github.com/JayD108/My_JAVA_FS-project">Code</a></div>
+    </li>
+  </ul>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section id="background" aria-labelledby="bg-h">
+  <div class="two">
+    <div>
+      <h2 class="section-title" id="bg-h">Education</h2>
+      <div class="rows">
+        <div><span class="label">B.Tech CSE</span><span>SRM Institute of Science and Technology<br>Class of 2028 &middot; CGPA 9.85</span></div>
+        <div><span class="label">Class 12</span><span>CBSE &middot; 92.2%</span></div>
+        <div><span class="label">Class 10</span><span>CBSE &middot; 97.2%</span></div>
+      </div>
+    </div>
+    <div>
+      <h2 class="section-title">Skills</h2>
+      <div class="rows">
+        <div><span class="label">Languages</span><span>Python, Java, C++, JavaScript, TypeScript</span></div>
+        <div><span class="label">Learning now</span><span>Java backend development</span></div>
+        <div><span class="label">Problem solving</span><span>Data structures and algorithms in C++</span></div>
+        <div><span class="label">Mobile</span><span>Android development</span></div>
+        <div><span class="label">Machine learning</span><span>PyTorch, XGBoost, LightGBM, scikit-learn, Numba</span></div>
+        <div><span class="label">Model types</span><span>Transformers, U-Nets, stacking ensembles</span></div>
+        <div><span class="label">Backend and web</span><span>FastAPI, Next.js, WebSockets, Neo4j, Ollama</span></div>
+        <div><span class="label">Scientific data</span><span>EDF, NetCDF4, HDF5, GeoTIFF</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="wrap">
+<section id="contact" aria-labelledby="contact-h">
+  <div class="contact-grid">
+    <div>
+      <h2 class="section-title" id="contact-h">Contact</h2>
+      <p class="quote">&ldquo;It's not who I am underneath, but what I build that defines me.&rdquo;</p>
+    </div>
+    <div class="rows">
+      <div><span class="label">Email</span><span class="todo" style="justify-self:start">add: email you want public</span></div>
+      <div><span class="label">GitHub</span><a href="https://github.com/JayD108">github.com/JayD108</a></div>
+      <div><span class="label">Hugging Face</span><a href="https://huggingface.co/JayF14">huggingface.co/JayF14</a></div>
+      <div><span class="label">X</span><a href="https://x.com/JayD_108">@JayD_108</a></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="wrap"><footer class="mono"><span class="brand"><img src="logo.png" alt="" width="288" height="162">Mrittunjay Dubey, 2026</span><span>Built after dark</span></footer></div>
+
+<div id="tip" hidden></div>
+
+<script>
+(function () {
+  var tip = document.getElementById('tip');
+  function showTip(html, x, y) {
+    tip.innerHTML = html; tip.hidden = false;
+    var r = tip.getBoundingClientRect();
+    var left = x + 14; if (left + r.width > innerWidth - 8) left = x - r.width - 14;
+    var top = y - r.height - 12; if (top < 8) top = y + 16;
+    tip.style.left = Math.max(8, left) + 'px'; tip.style.top = top + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+  function row(a, b) { return '<div><span>' + a + '</span><span>' + b + '</span></div>'; }
+
+  function legend(id, series) {
+    document.getElementById(id).innerHTML = series.map(function (s) {
+      return '<span><i style="background:var(' + s.color + ')"></i>' + s.name + '</span>';
+    }).join('');
+  }
+
+  function lineChart(id, c) {
+    var el = document.getElementById(id);
+    var NS = 'http://www.w3.org/2000/svg';
+    function draw() {
+      var w = el.clientWidth || 500, h = Math.max(240, Math.min(320, w * 0.58));
+      var m = { t: 12, r: 96, b: 30, l: 40 };
+      var iw = w - m.l - m.r, ih = h - m.t - m.b;
+      function sx(i) { return m.l + (c.pos(i) * iw); }
+      function sy(v) { return m.t + ih - (v / c.yMax) * ih; }
+      var s = '<svg xmlns="' + NS + '" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" aria-hidden="true">';
+      c.yTicks.forEach(function (t) {
+        s += '<line x1="' + m.l + '" x2="' + (w - m.r) + '" y1="' + sy(t) + '" y2="' + sy(t) + '" style="stroke:var(--line)" stroke-width="1"/>';
+        s += '<text x="' + (m.l - 8) + '" y="' + (sy(t) + 4) + '" text-anchor="end" style="fill:var(--muted);font:400 11px var(--mono)">' + t + c.yUnit + '</text>';
+      });
+      c.xTicks.forEach(function (i) {
+        s += '<text x="' + sx(i) + '" y="' + (h - 8) + '" text-anchor="middle" style="fill:var(--muted);font:400 11px var(--mono)">' + c.x[i] + '</text>';
+      });
+      c.series.forEach(function (ser) {
+        var d = ser.values.map(function (v, i) { return (i ? 'L' : 'M') + sx(i).toFixed(1) + ' ' + sy(v).toFixed(1); }).join(' ');
+        s += '<path d="' + d + '" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="stroke:var(' + ser.color + ')"/>';
+        ser.values.forEach(function (v, i) {
+          s += '<circle cx="' + sx(i) + '" cy="' + sy(v) + '" r="4" stroke-width="2" style="fill:var(' + ser.color + ');stroke:var(--bg)"/>';
+        });
+        var last = ser.values[ser.values.length - 1], lx = sx(ser.values.length - 1) + 10, ly = sy(last);
+        s += '<text x="' + lx + '" y="' + (ly - 2) + '" style="fill:var(--muted);font:400 11.5px var(--body)">' + ser.name + '</text>';
+        s += '<text x="' + lx + '" y="' + (ly + 12) + '" style="fill:var(--fg);font:500 12px var(--mono)">' + c.fmt(last) + '</text>';
+      });
+      s += '<line class="xh" y1="' + m.t + '" y2="' + (m.t + ih) + '" stroke-width="1" visibility="hidden" style="stroke:var(--muted)"/>';
+      s += '<rect class="hit" x="' + m.l + '" y="0" width="' + iw + '" height="' + h + '" fill="transparent"/></svg>';
+      el.innerHTML = s;
+      var hit = el.querySelector('.hit'), xh = el.querySelector('.xh');
+      hit.addEventListener('pointermove', function (e) {
+        var b = el.getBoundingClientRect(), px = e.clientX - b.left, best = 0, bd = 1e9;
+        c.x.forEach(function (_, i) { var d = Math.abs(sx(i) - px); if (d < bd) { bd = d; best = i; } });
+        xh.setAttribute('x1', sx(best)); xh.setAttribute('x2', sx(best)); xh.setAttribute('visibility', 'visible');
+        showTip('<b>' + c.tipTitle(best) + '</b>' + c.series.map(function (ser) {
+          return row(ser.name, ser.tip ? ser.tip[best] : c.fmt(ser.values[best]));
+        }).join(''), e.clientX, e.clientY);
+      });
+      hit.addEventListener('pointerleave', function () { xh.setAttribute('visibility', 'hidden'); hideTip(); });
+    }
+    draw();
+    if (window.ResizeObserver) {
+      var lw = el.clientWidth;
+      new ResizeObserver(function () { if (el.clientWidth !== lw) { lw = el.clientWidth; draw(); } }).observe(el);
+    }
+  }
+
+  var vSeries = [
+    { name: 'Thunderstorm', color: '--s2', values: [40, 72, 75.82, 85.97], tip: ['~40%', '~72%', '75.82%', '85.97%'] },
+    { name: 'Cloudburst', color: '--s1', values: [0.08, 0.08, 10.6, 30], tip: ['0.08%', '0.08%', '10.60%', '30.00%'] },
+    { name: 'Flash flood', color: '--s3', values: [0, 0, 1.52, 14.94], tip: ['0.00%', '0.00%', '1.52%', '14.94%'] }
+  ];
+  legend('varuna-legend', vSeries);
+  lineChart('varuna-chart', {
+    x: ['v1.0', 'v2.0', 'v2.1', 'v3.0'], xTicks: [0, 1, 2, 3], pos: function (i) { return i / 3; },
+    yMax: 100, yTicks: [0, 25, 50, 75, 100], yUnit: '%', series: vSeries,
+    fmt: function (v) { return v.toFixed(1) + '%'; },
+    tipTitle: function (i) { return ['v1.0 (runs 1–3)', 'v2.0 (runs 4–5)', 'v2.1 (run 6)', 'v3.0 (final)'][i]; }
+  });
+
+  var steps = [0, 500, 2000, 5000, 10000, 15000];
+  var mSeries = [
+    { name: 'Validation', color: '--s2', values: [4.85, 2.61, 2.15, 2.05, 2.07, 2.11] },
+    { name: 'Train', color: '--s1', values: [4.85, 2.29, 1.62, 1.35, 1.16, 1.03] }
+  ];
+  legend('manas-legend', mSeries);
+  lineChart('manas-chart', {
+    x: steps.map(function (s) { return s.toLocaleString('en-US'); }), xTicks: [0, 3, 4, 5],
+    pos: function (i) { return steps[i] / 15000; },
+    yMax: 5, yTicks: [0, 1, 2, 3, 4, 5], yUnit: '', series: mSeries,
+    fmt: function (v) { return v.toFixed(2); },
+    tipTitle: function (i) { return 'Step ' + steps[i].toLocaleString('en-US'); }
+  });
+
+  /* Hero scene: skyline, searchlight and signal disc. The light follows the pointer on the empty side of the hero. */
+  (function () {
+    var sky = document.getElementById('sky'), cv = document.getElementById('sky-canvas'), ctx = cv.getContext('2d');
+    var btn = document.getElementById('signal-btn'), bat = new Path2D('M0 -8 L4 -18 L7 -8 L13 -10 Q30 -22 50 -14 Q40 -2 36 10 Q28 0 22 14 Q16 4 10 16 L0 24 L-10 16 Q-16 4 -22 14 Q-28 0 -36 10 Q-40 -2 -50 -14 Q-30 -22 -13 -10 L-7 -8 L-4 -18 Z');
+    var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var W, H, dpr, R, back, front, src, b, home, cur, aim = null, on = true, visible = true, raf = 0;
+    function rng(seed) { return function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    function layer() { var c = document.createElement('canvas'); c.width = W * dpr; c.height = H * dpr; var x = c.getContext('2d'); x.scale(dpr, dpr); return [c, x]; }
+    function layout() {
+      W = sky.clientWidth; H = sky.clientHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = W * dpr; cv.height = H * dpr;
+      var wide = W >= 900, cityH = wide ? 112 : 92, r = rng(1939);
+      R = clamp(W * 0.08, 58, 96);
+      var box = sky.getBoundingClientRect(), text = sky.querySelector('.hero-text').getBoundingClientRect(), name = sky.querySelector('.hero-name').getBoundingClientRect();
+      b = wide
+        ? { x0: text.right - box.left + R + 30, x1: W - R - 24, y0: name.bottom - box.top + R * 0.7, y1: H - cityH - R * 0.7 }
+        : { x0: R + 16, x1: W - R - 16, y0: text.bottom - box.top + R + 14, y1: H - cityH - R * 0.45 };
+      if (b.x1 < b.x0) b.x1 = b.x0;
+      if (b.y1 < b.y0) b.y1 = b.y0;
+      home = { x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 };
+      cur = cur ? { x: clamp(cur.x, b.x0, b.x1), y: clamp(cur.y, b.y0, b.y1) } : { x: home.x, y: home.y };
+
+      var l = layer(); back = l[0]; var g = l[1];
+      var grad = g.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#0B0E16'); grad.addColorStop(0.55, '#10141F'); grad.addColorStop(1, '#1B2130');
+      g.fillStyle = grad; g.fillRect(0, 0, W, H);
+      for (var i = 0; i < 12; i++) {
+        var cx = r() * W, cy = H * (0.1 + r() * 0.65), cr = 90 + r() * 190;
+        var cg = g.createRadialGradient(cx, cy, 0, cx, cy, cr);
+        cg.addColorStop(0, 'rgba(58,66,88,.2)'); cg.addColorStop(1, 'rgba(58,66,88,0)');
+        g.fillStyle = cg; g.save(); g.translate(cx, cy); g.scale(1.9, 0.5); g.translate(-cx, -cy);
+        g.beginPath(); g.arc(cx, cy, cr, 0, 7); g.fill(); g.restore();
+      }
+
+      l = layer(); front = l[0]; g = l[1];
+      var ground = H, towerX = wide ? W * 0.62 : W * 0.84;
+      function tower(x, w, h, spire) {
+        g.fillStyle = '#05070C'; g.fillRect(x, ground - h, w, h);
+        if (spire) { g.beginPath(); g.moveTo(x + w * 0.25, ground - h); g.lineTo(x + w / 2, ground - h - spire); g.lineTo(x + w * 0.75, ground - h); g.fill(); }
+        else if (r() < 0.4) g.fillRect(x + w * 0.25, ground - h - 8, w * 0.5, 8);
+        for (var wy = ground - h + 7; wy < ground - 5; wy += 9) for (var wx = x + 4; wx < x + w - 5; wx += 7) {
+          if (r() < 0.1) { g.fillStyle = 'rgba(245,197,66,.6)'; g.fillRect(wx, wy, 2.5, 4); }
+        }
+      }
+      var x = -6;
+      while (x < W) {
+        var bw = 20 + r() * 46;
+        tower(x, bw, cityH * (0.28 + r() * 0.62), r() < 0.18 ? 12 + r() * 24 : 0);
+        x += bw + (r() < 0.2 ? 3 : 0);
+      }
+      var th = cityH * 0.9; tower(towerX - 17, 34, th, 0);
+      src = { x: towerX, y: ground - th - 10 };
+      g.fillStyle = '#05070C'; g.fillRect(towerX - 7, src.y + 2, 14, 10);
+    }
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.drawImage(back, 0, 0, W, H);
+      if (on) {
+        var dx = cur.x - src.x, dy = cur.y - src.y, d = Math.hypot(dx, dy) || 1, nx = -dy / d, ny = dx / d;
+        var bg = ctx.createLinearGradient(src.x, src.y, cur.x, cur.y);
+        bg.addColorStop(0, 'rgba(245,197,66,.42)'); bg.addColorStop(1, 'rgba(245,197,66,.08)');
+        ctx.fillStyle = bg; ctx.beginPath();
+        ctx.moveTo(src.x + nx * 5, src.y + ny * 5); ctx.lineTo(cur.x + nx * R * 0.92, cur.y + ny * R * 0.92);
+        ctx.lineTo(cur.x - nx * R * 0.92, cur.y - ny * R * 0.92); ctx.lineTo(src.x - nx * 5, src.y - ny * 5); ctx.fill();
+        var glow = ctx.createRadialGradient(cur.x, cur.y, R * 0.7, cur.x, cur.y, R * 1.8);
+        glow.addColorStop(0, 'rgba(245,197,66,.24)'); glow.addColorStop(1, 'rgba(245,197,66,0)');
+        ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cur.x, cur.y, R * 1.8, 0, 7); ctx.fill();
+        var disc = ctx.createRadialGradient(cur.x, cur.y, 0, cur.x, cur.y, R);
+        disc.addColorStop(0, 'rgba(250,216,110,.98)'); disc.addColorStop(0.82, 'rgba(245,197,66,.92)'); disc.addColorStop(1, 'rgba(245,197,66,0)');
+        ctx.fillStyle = disc; ctx.beginPath(); ctx.arc(cur.x, cur.y, R, 0, 7); ctx.fill();
+        var s = R * 1.5 / 100;
+        ctx.save(); ctx.translate(cur.x, cur.y - R * 0.04); ctx.scale(s, s); ctx.fillStyle = '#0B0E16'; ctx.fill(bat); ctx.restore();
+      }
+      ctx.drawImage(front, 0, 0, W, H);
+      if (on) { ctx.fillStyle = '#FAD86E'; ctx.beginPath(); ctx.arc(src.x, src.y, 4, 0, 7); ctx.fill(); }
+    }
+    function tick(t) {
+      raf = 0;
+      if (!visible) return;
+      var tx, ty;
+      if (aim) { tx = aim.x; ty = aim.y; }
+      else {
+        tx = home.x + Math.sin(t / 3100) * Math.min(26, (b.x1 - b.x0) / 2);
+        ty = home.y + Math.cos(t / 4300) * Math.min(14, (b.y1 - b.y0) / 2);
+      }
+      cur.x += (tx - cur.x) * 0.07; cur.y += (ty - cur.y) * 0.07;
+      draw();
+      raf = requestAnimationFrame(tick);
+    }
+    function start() { if (!still && !raf && visible) raf = requestAnimationFrame(tick); else if (still) draw(); }
+    sky.addEventListener('pointermove', function (e) {
+      if (still || e.pointerType !== 'mouse') return;
+      var box = sky.getBoundingClientRect();
+      aim = { x: clamp(e.clientX - box.left, b.x0, b.x1), y: clamp(e.clientY - box.top, b.y0, b.y1) };
+    });
+    sky.addEventListener('pointerleave', function () { aim = null; });
+    btn.addEventListener('click', function () {
+      on = !on;
+      btn.textContent = on ? 'Turn off the signal' : 'Light the signal';
+      btn.setAttribute('aria-pressed', String(on));
+      draw();
+    });
+    layout(); draw(); start();
+    if (window.IntersectionObserver) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; start(); }).observe(sky);
+    if (window.ResizeObserver) new ResizeObserver(function () { if (sky.clientWidth !== W || sky.clientHeight !== H) { layout(); draw(); } }).observe(sky);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(); draw(); });
+  })();
+
+  /* Work tabs: AI & ML or Development. Without this script both panels simply show. */
+  (function () {
+    var tabs = [].slice.call(document.querySelectorAll('.path')), work = document.getElementById('work');
+    function select(name, focus) {
+      tabs.forEach(function (t) {
+        var isOn = t.getAttribute('aria-controls') === name;
+        t.setAttribute('aria-selected', String(isOn));
+        t.tabIndex = isOn ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !isOn;
+        if (isOn && focus) t.focus();
+      });
+    }
+    function fromHash(scroll) {
+      var name = location.hash.slice(1);
+      if (name !== 'ai-ml' && name !== 'development') return false;
+      select(name);
+      if (scroll) work.scrollIntoView();
+      return true;
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t.getAttribute('aria-controls')); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        select(tabs[(i + 1) % tabs.length].getAttribute('aria-controls'), true);
+      });
+    });
+    if (!fromHash(true)) select('ai-ml');
+    window.addEventListener('hashchange', function () { fromHash(true); });
+    document.querySelectorAll('.panel a[href="#ai-ml"], .panel a[href="#development"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var name = a.getAttribute('href').slice(1);
+        e.preventDefault();
+        select(name);
+        work.scrollIntoView();
+      });
+    });
+  })();
+
+  document.querySelectorAll('.bars .bar').forEach(function (b) {
+    var p = b.getAttribute('data-tip').split('|');
+    b.addEventListener('pointermove', function (e) {
+      showTip('<b>' + p[0] + '</b>' + p.slice(1).map(function (t) {
+        var k = t.split(' '), v = k.pop(); return row(k.join(' '), v);
+      }).join(''), e.clientX, e.clientY);
+    });
+    b.addEventListener('pointerleave', hideTip);
+  });
+
+  var btn = document.getElementById('copy-btn'), cmd = document.getElementById('install-cmd');
+  btn.addEventListener('click', function () {
+    function done(t) { btn.textContent = t; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+    function fallback() { var r = document.createRange(); r.selectNodeContents(cmd); var s = getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cmd.textContent).then(function () { done('Copied'); }, fallback);
+    else fallback();
+  });
+})();
+</script>
+</html>
